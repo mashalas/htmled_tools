@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Генерация QR-кодов</title>
+  <meta name="description" content="Для введённого текста сгенерировать QR-код">
+  <meta name="author" content="mashalas">
+  <script src="qrcode.min.js"></script>
+</head>
+<body>
+    <script>
+      function qr_encoding()
+      {
+        var text = document.getElementById("text_for_encoding").value;
+        //alert(text);
+
+        qr_element = document.getElementById("qrcode");
+        qr_element.innerHTML = "";
+
+        var qrcode = new QRCode(qr_element, {
+            text: text, // Введите здесь текст или URL-адрес, который вы хотите закодировать в QR-код
+            width: 256, // Ширина QR-кода в пикселях
+            height: 256, // Высота QR-кода в пикселях
+            colorDark: "#000000", // Цвет кода
+            colorLight: "#ffffff", // Цвет фона
+            correctLevel: QRCode.CorrectLevel.H, // уровень исправления ошибок
+        });
+        // Отображение QR-кода
+        /*function showQRCode() {
+            qrcode.makeCode(document.getElementById("qr-text").value);
+        }*/
+
+      }
+    </script>
+
+   <p align="center">Текст для кодирования:</p>
+   <!-- <p align="center"><input type="text" id="text_for_encoding" value="https://www.yandex.ru"></p>  -->
+   <p align="center"><textarea id="text_for_encoding" style="width:500px; height:300px;">Введите тут текст для кодирования</textarea></p>
+   <p align="center"><input type="button" value="Закодировать" onClick="qr_encoding();" /></p>
+
+    <!-- сюда будет вставляться картинка с QR-кодом -->
+    <div id="qrcode" align="center"></div>
+
+</body>
+</html>
+
