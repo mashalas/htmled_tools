@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+  <style>
+    .cell_caption {
+      font-weight: bold;
+    }
+
+    td div {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+let CHARS = [];
+let CODES = [];
+
+
+function set_pair(char, code)
+{
+  CHARS.push(char);
+  CODES.push(code.toUpperCase());
+
+  CHARS.push(char);
+  CODES.push(code.toLowerCase());
+}
+
+function set_all_pairs()
+{
+    set_pair('А', '0410');
+    set_pair('Б', '0411');
+    set_pair('В', '0412');
+    set_pair('Г', '0413');
+    set_pair('Д', '0414');
+    set_pair('Е', '0415');
+    set_pair('Ё', '0401');
+    set_pair('Ж', '0416');
+    set_pair('З', '0417');
+    set_pair('И', '0418');
+    set_pair('Й', '0419');
+    set_pair('К', '041A');
+    set_pair('Л', '041B');
+    set_pair('М', '041C');
+    set_pair('Н', '041D');
+    set_pair('О', '041E');
+    set_pair('П', '041F');
+    set_pair('Р', '0420');
+    set_pair('С', '0421');
+    set_pair('Т', '0422');
+    set_pair('У', '0423');
+    set_pair('Ф', '0424');
+    set_pair('Х', '0425');
+    set_pair('Ц', '0426');
+    set_pair('Ч', '0427');
+    set_pair('Ш', '0428');
+    set_pair('Щ', '0429');
+    set_pair('Ъ', '042A');
+    set_pair('Ы', '042B');
+    set_pair('Ь', '042C');
+    set_pair('Э', '042D');
+    set_pair('Ю', '042E');
+    set_pair('Я', '042F');
+
+    set_pair('а', '0430');
+    set_pair('б', '0431');
+    set_pair('в', '0432');
+    set_pair('г', '0433');
+    set_pair('д', '0434');
+    set_pair('е', '0435');
+    set_pair('ё', '0451');
+    set_pair('ж', '0436');
+    set_pair('з', '0437');
+    set_pair('и', '0438');
+    set_pair('й', '0439');
+    set_pair('к', '043A');
+    set_pair('л', '043B');
+    set_pair('м', '043C');
+    set_pair('н', '043D');
+    set_pair('о', '043E');
+    set_pair('п', '043F');
+    set_pair('р', '0440');
+    set_pair('с', '0441');
+    set_pair('т', '0442');
+    set_pair('у', '0443');
+    set_pair('ф', '0444');
+    set_pair('х', '0445');
+    set_pair('ц', '0446');
+    set_pair('ч', '0447');
+    set_pair('ш', '0448');
+    set_pair('щ', '0449');
+    set_pair('ъ', '044A');
+    set_pair('ы', '044B');
+    set_pair('ь', '044C');
+    set_pair('э', '044D');
+    set_pair('ю', '044E');
+    set_pair('я', '044F');
+
+    set_pair('№', '2116'); //номер
+    set_pair('√', '221A'); //корень
+    set_pair('°', '00B0'); //градус
+
+}
+
+set_all_pairs();
+
+function convertToUnicode()
+{
+  let s = document.getElementById('text').value;
+  let i, seek, replace_to;
+  for (i=0; i<CHARS.length; i++) {
+    seek = CHARS[i];
+    replace_to = '\\u' + CODES[i];
+    s = s.replaceAll(seek, replace_to);
+  }
+  document.getElementById('unicode').value = s;
+}
+
+function convertFromUnicode()
+{
+  let s = document.getElementById('unicode').value;
+  let i, seek, replace_to;
+  for (i=0; i<CHARS.length; i++) {
+    seek = '\\u' + CODES[i] + '';
+    replace_to = CHARS[i];
+    s = s.replaceAll(seek, replace_to);
+  }
+  document.getElementById('text').value = s;
+}
+
+</script>
+
+<table border="1" width="100%">
+  <tr>
+    <td width="50%"><div class="cell_caption">Текст:</div></td>
+    <td width="50%"><div class="cell_caption">Unicode-коды:</div></td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <textarea id="text" style="width: 100%; height: 500px;"></textarea>
+      <div>
+        <input type="button" value="&gt;&gt; в коды юникода &#x21D2;" onClick="convertToUnicode();">
+      </div>
+    </td>
+    <td width="50%">
+      <textarea id="unicode" style="width: 100%; height: 500px;"></textarea>
+      <div>
+        <input type="button" value="&#x21D0; в символы &lt;&lt;" onClick="convertFromUnicode();">
+      </div>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">document.getElementById('text').addEventListener('dblclick' , function(){this.value='';});</script>
+<script type="text/javascript">document.getElementById('unicode').addEventListener('dblclick' , function(){this.value='';});</script>
+
+
+<!-- 
+  № &#x2116; 
+  √ &#x221A;
+  ° &#x00B0;
+-->
+
+</body>
+</html>

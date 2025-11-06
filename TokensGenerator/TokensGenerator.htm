@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Генерация случайного текста (tokens)</title>
+  <meta name="description" content="Генерация строк со случайным набором символов. Может пригодиться при генерации токенов доступа или паролей.">
+  <meta name="author" content="mashalas">
+  <style>
+
+    .button {
+      background-color: lightgray;
+      border: 1px solid black;
+      height: 26px;
+      border-radius: 5px;
+    }
+
+    .button:hover {
+      color: #fcfcfc;
+    }
+
+    .single_cell {
+      text-align: center;
+      justify-content: center;
+    }
+
+    .custom_number {
+      width: 32px;
+    }
+
+    textarea {
+      margin-top: 15px;
+    }
+
+  </style>
+  <script>
+
+    let safeSpecSymbolsStr = '=+-_!~^';
+
+    function getRandomInt(min, max)
+    {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getRandomString(targetLength, dictionary)
+    {
+      let s = '';
+      let p;
+      while (s.length < targetLength) {
+        p = getRandomInt(0, dictionary.length-1);
+        s += dictionary.charAt(p);
+      }
+      return s;
+    }
+
+    function runGeneration()
+    {
+      let dictionary = '';
+      if (document.getElementById('digits').checked)
+        dictionary += '0123456789';
+      if (document.getElementById('spec_symbols').checked)
+        dictionary += '.,!?;:<>()[]{}`~@#$%^&*-_+=|/\\\'\"';
+      if (document.getElementById('safe_spec_symbols').checked)
+        dictionary += safeSpecSymbolsStr;
+      if (document.getElementById('lower_eng_letters').checked)
+        dictionary += 'abcdefghijklmnopqrstuvwxyz';
+      if (document.getElementById('upper_eng_letters').checked)
+        dictionary += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      if (document.getElementById('lower_rus_letters').checked)
+        dictionary += 'абвгдаёжзийклмнопрстуфхцчшщъыьэюя';
+      if (document.getElementById('upper_rus_letters').checked)
+        dictionary += 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
+      if (document.getElementById('lower_hex_digits').checked)
+        dictionary += '0123456789abcdef';
+      if (document.getElementById('upper_hex_digits').checked)
+        dictionary += '0123456789ABCDEF';
+      if (document.getElementById('custom_symbols').checked)
+        dictionary += document.getElementById('custom_symbols_list').value;
+      //alert(dictionary); return;
+      
+
+      let rowsCount = Number(document.getElementById('rows_count').value);
+      let minLength = Number(document.getElementById('min_length').value);
+      let maxLength = Number(document.getElementById('max_length').value);
+      if (minLength > maxLength) {
+        let tmp = minLength;
+        minLength = maxLength;
+        maxLength = tmp;
+      }
+
+      let randomTextElement = document.getElementById('random_text');
+      randomTextElement.innerHTML = '';
+
+      let randomText = '';
+
+      for (let i=0; i<rowsCount; i++) {
+        let targetLength = getRandomInt(minLength, maxLength);
+        let s = getRandomString(targetLength, dictionary);
+        randomText += s + '\n';
+      }
+      randomTextElement.innerHTML = randomText;
+    }
+
+    function clearOther(exclude)
+    {
+      if (exclude == '' || document.getElementById(exclude).checked) {
+        //снимать галочки с других элементов, только если для exclude она установлена
+        let idList = [
+          'digits', 'spec_symbols', 'safe_spec_symbols', 'lower_eng_letters', 'upper_eng_letters',
+          'lower_rus_letters', 'upper_rus_letters', 'lower_hex_digits', 'upper_hex_digits', 'custom_symbols'
+        ];
+        for (let i=0; i<idList.length; i++) {
+          if (exclude != idList[i]) {
+            document.getElementById(idList[i]).checked = false;
+          }
+        }
+        document.getElementById('custom_symbols').checked = false;
+        //document.getElementById('custom_symbols_list').value = '';
+      }
+    }
+  </script>
+</head>
+
+<body>
+<form>
+  <table border="0">
+    <tr>
+      <td><input type="checkbox" id="digits" checked /></td>
+      <td><label for="digits">Цифры</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="spec_symbols" /></td>
+      <td><label for="spec_symbols">Все спец.-символы ( . , ! ? &lt; &gt; и т.д.)</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="safe_spec_symbols" /></td>
+      <td>
+        <label for="safe_spec_symbols">
+        <i>"Безопасные"</i> спец.-символы (
+          <span id="safe_spec_symbols_list"></span>
+          <script>
+            document.getElementById('safe_spec_symbols_list').innerHTML = safeSpecSymbolsStr;
+          </script>
+          )
+        </label>
+      </td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="lower_eng_letters" checked /></td>
+      <td><label for="lower_eng_letters">Маленькие английские буквы</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="upper_eng_letters" /></td>
+      <td><label for="upper_eng_letters">Большие английские буквы</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="lower_rus_letters" /></td>
+      <td><label for="lower_rus_letters">Маленькие русские буквы</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="upper_rus_letters" /></td>
+      <td><label for="upper_rus_letters">Большие русские буквы</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="lower_hex_digits" onClick="clearOther(this.id);" /></td>
+      <td><label for="lower_hex_digits">16-ричные символы в нижнем регистре</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="upper_hex_digits" onClick="clearOther(this.id);" /></td>
+      <td><label for="upper_hex_digits">16-ричные символы в верхнем регистре</label></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="custom_symbols" /></td>
+      <td>
+        <div class="custom_symbols_block">
+          <label for="custom_symbols">Пользовательские символы:</label><br />
+          <input type="text" id="custom_symbols_list" value="" onKeyPress="document.getElementById('custom_symbols').checked=true;" />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <input type="button" value="Снять все галочки" class="button" onClick="clearOther('');" />
+      </td>
+    </tr>
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+
+    <tr>
+      <td><input type="text" id="min_length" value="32" class="custom_number" /></td>
+      <td>Минимальная длина случайной строки</td>
+    </tr>
+    <tr>
+      <td><input type="text" id="max_length" value="32" class="custom_number" /></td>
+      <td>Максимальная длина случайной строки</td>
+    </tr>
+    <tr>
+      <td><input type="text" id="rows_count" value="12" class="custom_number" /></td>
+      <td>Количество сгенерированных строк</td>
+    </tr>
+
+    <tr><td colspan="2">&nbsp;</td></tr>
+
+    <tr>
+      <td colspan="2" class="single_cell">
+        <input type="button" class="button" value="Запустить генерацию" onClick="runGeneration();"/>
+        <input type="reset" class="button" value="Значения по умолчанию"/>
+      </td>
+    </tr>
+  </table>
+
+  <textarea id="random_text" style="width: 400px; height: 300px;"></textarea>
+  <!-- при двойном клиент по текстовой области очистить текст -->
+  <script type="text/javascript">document.getElementById('random_text').addEventListener('dblclick' , function(){this.innerHTML='';});</script>
+
+</form>
+</body>
+</html>
